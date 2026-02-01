@@ -2,13 +2,38 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from django.utils.text import slugify
-import uuid
 from django.urls import reverse
+
+import uuid
+from taggit.managers import TaggableManager
+from taggit.models import TagBase, GenericTaggedItemBase
 
 # Create your models here.
 class PublishedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status="PB")
+
+
+class Tag(TagBase):
+    class Meta:
+        verbose_name = "Tag"
+        verbose_name_plural = "Tags"
+
+
+class TaggedItem(GenericTaggedItemBase):
+    object_id = models.UUIDField()
+    tag = models.ForeignKey(
+        Tag,
+        on_delete=models.CASCADE,
+        related_name="%(app_label)s_%(class)s_items",
+    )
+
+    class Meta:
+        verbose_name = "Tagged Item"
+        verbose_name_plural = "Tagged Items"
+        indexes = [
+            models.Index(fields=["content_type", "object_id"]),
+        ]
 
 
 class Post(models.Model):
@@ -51,6 +76,8 @@ class Post(models.Model):
     
     objects = models.Manager()  # Default manager
     published = PublishedManager()
+
+    tags = TaggableManager(through=TaggedItem)
 
     def __str__(self):
         return self.title

@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
     # Post views
+    # view tags - must come before the date-based pattern
+    path('tags/<slug:tag_slug>/', views.post_list, name='post_list_by_tag'),
     path('', views.post_list, name='post_list'),
     path(
         '<int:year>/<int:month>/<int:day>/<slug:post>/',

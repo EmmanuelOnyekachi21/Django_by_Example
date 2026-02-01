@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # 3rd party apps
+    'taggit',
+
     # local apps
     'apps.blog'
 ]
@@ -79,8 +82,12 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'django_blog',
+        'USER': 'django_user',
+        'PASSWORD': '0802',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
